@@ -14,8 +14,12 @@ def md5_from_file(f,bs=2**20):
 		h.update(data)
 	return h.hexdigest()
 
-#Check if we have 4 args
-if not len(sys.argv) == 4:
+#Check if we have 4 args (4th arg will be sort_table)
+#if not len(sys.argv) == 4:
+#	sys.exit()
+
+#Check if we have 3 args (Filefilter.py, Folder to filter, Folder to compare against)
+if not len(sys.argv) == 3:
 	sys.exit()
 
 #Get first and second arguments (for target and comparison folder)
@@ -89,7 +93,7 @@ for sd,d,f in os.walk(Target):
 				os.remove(filepath)
 				break
 			else:
-				print("")
+				pass #This will sort the file based on fileinfo
 #Otherwise, get file info
 #sort it based on sort_table
 		file.close()
