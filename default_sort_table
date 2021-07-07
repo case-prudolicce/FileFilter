@@ -1,0 +1,20 @@
+text/plain:/TEXT/
+text/html:/TEXT/HTML/
+text/troff:/TEXT/MAN PAGES/
+text/x-asm:/TEXT/HTML/CSS/
+text/x-bytecode.python:/TEXT/PYTHON/COMPILED/
+text/x-script.python:/TEXT/PYTHON/
+text/x-c:/TEXT/C/
+text/x-perl:/TEXT/PERL/
+text/xml:/TEXT/XML/
+text/x-shellscript:/TEXT/SCRIPTS/
+image/jpeg:/IMAGES/
+image/png:/IMAGES/
+image/vnd.microsoft.icon:/IMAGES/WINDOWSICONS/
+image/webp:/IMAGES/WEBP/
+application/x-tar:/APP/ARCHIVE/
+application/octet-stream:/MISC/OCTET-STREAM/
+application/vnd.openxmlformats-officedocument.wordprocessingml.document:/TEXT/WORD/
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:/TEXT/SPREADSHEETS/
+application/pdf:/TEXT/PDF
+*:/MISC/
