@@ -16,5 +16,5 @@ application/x-tar:/APP/ARCHIVE/
 application/octet-stream:/MISC/OCTET-STREAM/
 application/vnd.openxmlformats-officedocument.wordprocessingml.document:/TEXT/WORD/
 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:/TEXT/SPREADSHEETS/
-application/pdf:/TEXT/PDF
+application/pdf:/TEXT/PDF/
 *:/MISC/
