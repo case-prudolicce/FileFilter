@@ -2,7 +2,6 @@
 * Fancy display when generating hash file and filtering (removing duplicates and sorting)
 * Exclusion list
     * Exclusion Rules
-* Hash only option (Makes a hash file from target)
 * Sort only option (Do not use hash file, do not remove duplicates)
 * Verbose option
 * Man Page
