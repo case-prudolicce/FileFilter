@@ -1,7 +1,7 @@
 # FileFilter
 **Takes Files from folder A and remove duplicates against** either **a list of hashes or** hashes made **from folder B. Then it sorts the files** based on mime type **to folder C** 
 ## Installing
-___
+
 > Requires Python3, Python3 Pip
 1. cd to repo folder
 1. 
@@ -11,7 +11,7 @@ ___
 1. 
     `make install`
 ## Basic Usage:
----
+
 ```bash 
 #Most basic, creates the hash list and the sorting destination called SORTED outside destination and filters,sorts.
 ff <TARGET> -d <DESTINATION>
@@ -22,7 +22,7 @@ ff <TARGET> -d <DESTINATION> -H <HASH LIST NAME/LOCATION>
 ```
 
 ## Arguments
----
+
 > **You need** `TARGET` **and either** `-d DESTINATION` **or** `-H HASHES` (**if** `-o` isn't specified)
 * `TARGET` : The folder you want to filter down (Mandatory, will remove duplicates and sort them)
 * `-d <DESTINATION>` : Destination folder (Will make a hash list out of it) 
@@ -37,7 +37,7 @@ ff <TARGET> -d <DESTINATION> -H <HASH LIST NAME/LOCATION>
 * `-o` / `--hash-only` : when this option is passed, FileFilter will only make a hash list from `TARGET`
 
 ## The Sort Table
-___
+
 The Sort table is a file that tells FileFilter where each mime type matched should go.
 
 Heres an example of what the default sort table looks like:
@@ -58,7 +58,7 @@ Each line is separated in 2 parts: The mime type and the location
 If no sort_table is provided (`-s`) the default one will be used, located at `/usr/`
 
 ## Uninstalling
-___
+
 1. 
     cd to repo folder
 1. 
