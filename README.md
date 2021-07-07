@@ -53,7 +53,7 @@ Each line is separated in 2 parts: The mime type and the location
 
 * #### The Location is the path (from `SORT_DEST`) that the given mime type binds to
 
-> `*:<PATH>` **Is required** and should be the default path from SORT_DEST if no mime type was matched.
+> `*:<PATH>` **Is required** and should be the default path from `SORT_DEST` if no mime type was matched.
 
 If no sort_table is provided (`-s`) the default one will be used, located at `/usr/`
 
