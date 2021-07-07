@@ -18,7 +18,7 @@ ff <TARGET> -d <DESTINATION>
 #Or if you want to use a premade hash list
 ff <TARGET> -H <HASH LIST LOCATION>
 #Or if you want to specify the name and location of the hash list when its made
-ff <TARGET> -d <DESTINATION> -H <HASH LIST NAME AND LOCATION>
+ff <TARGET> -d <DESTINATION> -H <HASH LIST NAME/LOCATION>
 ```
 
 ## Arguments
