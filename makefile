@@ -33,6 +33,12 @@ clean_test:
 	@rm -f ./.hashes
 	@rm -rf ./Sorted/
 
+reload_test_data: clean_test
+	@$(MAKE) --no-print-directory test_data
+
+reload_test_data_hash: clean_test
+	@$(MAKE) --no-print-directory test_data_hash
+
 test: test_data
 	@echo "#######################################"
 	@echo "Basic test Using A destination folder"

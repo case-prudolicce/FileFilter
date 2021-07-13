@@ -49,7 +49,6 @@ def make_hashfile(f, d, prompt=True,v=True):
 
 #Function to moves a file to destination
 def move_file(f,d):
-	print(f,"->",os.path.basename(f),"->",d+os.path.basename(f))
 	os.rename(f,d+os.path.basename(f))
 	return d+os.path.basename(f)
 
@@ -112,6 +111,7 @@ if args.destination == None and args.hashes == None:
 	print("You either need -d or -H")
 	sys.exit()
 
+print(args.sort_loc)
 if args.sort_loc == None:
 	Sort_Loc = "/usr/share/FileFilter/default_sort_table"
 else:
@@ -194,3 +194,4 @@ if not args.hash_only:
 if (not args.no_sort) and (not args.hash_only):
 	print("Sorting File on mime type and sort table")
 	sort_files(to_sort,Sort_Loc,Sort_Dest)
+print("DONE!!")
