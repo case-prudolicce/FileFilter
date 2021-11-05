@@ -5,7 +5,10 @@
 * Sort only option (Do not use hash file, do not remove duplicates) (--sort-only)
 * Verbose option (-v)
 * Man Page
-* Windows
+* Windows compatible version
 * OOP Transition
+* -m option (max bytes for hash)
 # Bugs to fix
 * If the sort table, destination or the hash list is in the target folder, it will get removed
+* Doesnt remove duplicate within its own directory
+* Random None pops up
