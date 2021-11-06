@@ -13,3 +13,4 @@
 * If the sort table, destination or the hash list is in the target folder, it will get removed
 * Doesnt remove duplicate within its own directory
 * Random None pops up
+* Bug if using "~" in path
