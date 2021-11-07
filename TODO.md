@@ -12,5 +12,3 @@
 # Bugs to fix
 * If the sort table, destination or the hash list is in the target folder, it will get removed
 * Doesnt remove duplicate within its own directory
-* Random None pops up
-* The sorted folder get made outside/in the same directory as hash when invoking like so: `./FileFilter.py "./Test Target" -H ~/test_hash_abs_list` (Sorted should be at . yet it is at ~)
