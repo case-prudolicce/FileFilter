@@ -8,7 +8,6 @@
 * Windows compatible version
 * OOP Transition
 * -m option (max bytes for hash)
-* Better test units
 # Bugs to fix
 * If the sort table, destination or the hash list is in the target folder, it will get removed
 * Doesnt remove duplicate within its own directory
