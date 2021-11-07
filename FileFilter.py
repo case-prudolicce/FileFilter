@@ -28,7 +28,6 @@ def make_hashfile(f, d, prompt=True,v=True):
 			for sd,d,F in os.walk(d):
 				for filename in F:
 					filepath = sd + os.sep + filename
-					#print(filepath)
 					file = open(filepath,mode='rb')
 					h = md5_from_file(file)+"\n"
 					file.close()
@@ -111,7 +110,6 @@ if args.destination == None and args.hashes == None:
 	print("You either need -d or -H")
 	sys.exit()
 
-print(args.sort_loc)
 if args.sort_loc == None:
 	Sort_Loc = "/usr/share/FileFilter/default_sort_table"
 else:
@@ -143,18 +141,23 @@ elif not args.destination == None:
 	make_hashfile(Hashes,Destination,True if prompt == None else False,prompt if not prompt == None else True)
 else:
 	Hashes = os.path.abspath(args.hashes)
-	m = re.search('^(.*/.*/).*$',Hashes)
-	Destination = m.group(1)
+	Destination = os.path.abspath('.')
 
 #Sets Sort_Dest (Needed after Destination is defined) to -S or outside destination
 if args.sort_dest == None and not args.hash_only:
 	Sort_Dest = os.path.abspath(Destination)
-	m = re.search('^(.*/.*/).*$',Destination)
-	Sort_Dest = m.group(1)+"Sorted/"
+	if not Sort_Dest == os.path.abspath('.'):
+		m = re.search('^(.*/.*/).*$',Destination)
+		Sort_Dest = m.group(1)+"Sorted/"
+	else:
+		Sort_Dest = Sort_Dest+"/Sorted/"
+	print(Sort_Dest)
 elif args.sort_dest == None:
-	print(os.path.abspath("./Sorted"))
+	pass
 else:
 	Sort_Dest = args.sort_dest
+	print(Sort_Dest)
+
 
 #Open hashes in read mode, get all hashes from files, removes trailing newline and stores them in a list
 hashlist = []
@@ -166,7 +169,7 @@ with open(Hashes,'r') as hashes:
 		h4sh = hashes.readline()
 		c += 1
 
-#Open all file in Target 
+#Open all file in Target
 #For each file, make a hash of it and compare it against the hash list
 if not args.hash_only:
 	to_sort = []
