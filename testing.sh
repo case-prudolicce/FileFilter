@@ -33,12 +33,14 @@ rm -rf ./test_hash_list 2> /dev/null
 
 make_hash_file() {
 	if [ "$1" == "" ] || [ "$1" == "-" ];then
+		clean_hash_file
 		make_test_data -q
 		[ ! "$2" == "-q" ] && echo -n Generating hashfile and removing Target Destination...
 		./FileFilter.py "./Test Destination" -H "./test_hash_list" -o 2>&1 >/dev/null
 		rm -rf "./Test Destination" 2>&1 >/dev/null
 		[ ! "$2" == "-q" ] && echo DONE!
 	else
+		clean_hash_file "$1"
 		make_test_data -q
 		[ ! "$2" == "-q" ] && echo -n Generating hashfile and removing Target Destination...
 		./FileFilter.py "./Test Destination" -H "$(parse_tilde "$1")" -o 2>&1 >/dev/null
@@ -49,7 +51,11 @@ make_hash_file() {
 }
 
 clean_hash_file() {
-	echo
+	if [ "$1" == "" ] || [ "$1" == "-" ];then
+		rm -rf './.hashes'
+	else
+		rm -rf "$1"
+	fi
 }
 
 check_sorted() {
@@ -133,10 +139,13 @@ test_basic() {
 	[ "$1" == "true" ] && echo "###################"
 	#Should be a ./Sorted folder with TEST_FILE_6 through 9
 	t1="$(check_sorted)"
+	#echo $t1
 	#Should be a ./.hashes file with 5 hashes
 	t2="$(check_hashfile)"
+	#echo $t2
 	#./Test Target or ./Sorted SHOULD NOT HAVE TEST_FILE_1
 	t3="$(check_testfile)"
+	#echo $t3
 	if [ "$1" == "true" ];then
 		[ "$t1" == "true" ] && [ "$t2" == "true" ] && [ "$t3" == "true" ] && echo -e "Testing ./FileFilter.py \"./Test Target\" -d \"./Test Destination\""$CLI_GREEN" PASSED"$CLI_RC || echo -e "Testing ./FileFilter.py \"./Test Target\" -d \"./Test Destination\""$CLI_RED" FAILED"$CLI_RC 
 	else

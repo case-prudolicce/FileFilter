@@ -6,91 +6,193 @@ import sys
 import argparse
 import magic
 
-#function to make hash from files, which is read by blocks to avoid overloading ram
-def md5_from_file(f,bs=2**20):
-	h = hashlib.md5()
-	while True:
-		data = f.read(bs)
-		if not data:
-			break
-		h.update(data)
-	return h.hexdigest()
-
-#Function to create and write .hashes
-def make_hashfile(f, d, prompt=True,v=True):
-	if os.path.isfile(f):
-		if(prompt):
-			v = False if input(f+" Already exists. Do you want to use it instead of overwriting it (Y/n)?") == "n" else v
-		if v: #Overwritting, same as writting
-			print("Making hashfile for "+d)
-			hashes = open(f,'w')
-			
-			for sd,d,F in os.walk(d):
+class ff:
+	def md5_from_file(self,bs=2**20,nl=True):
+		h = hashlib.md5()
+		while True:
+			data = self.file_read.read(bs)
+			if not data:
+				break
+			h.update(data)
+		return h.hexdigest() + ( "\n" if nl else "" )
+	
+	def make_hashfile(self):
+		if os.path.isfile(self.hashes):
+			if(self.prompt):
+				self.prompt_answer = False if input(self.hashes+" Already exists. Do you want to use it instead of overwriting it (Y/n)?") == "n" else self.prompt
+			if self.prompt_answer: #Overwritting, same as writting
+				print("Making hashfile for "+self.destination)
+				self.hash_file = open(self.hashes,'w')
+				
+				for sd,d,F in os.walk(self.destination):
+					for filename in F:
+						filepath = sd + os.sep + filename
+						self.file_read = open(filepath,mode='rb')
+						h = self.md5_from_file()
+						self.file_read.close()
+						self.hash_file.write(h)
+				self.hash_file.close()
+		else:
+			self.hash_file = open(self.hashes,'w')
+			#Open all files in Destination (Files to compare targets against)
+			for sd,d,F in os.walk(self.destination):
+				#For each file, make a hash of it and write it in the hash list
 				for filename in F:
 					filepath = sd + os.sep + filename
-					file = open(filepath,mode='rb')
-					h = md5_from_file(file)+"\n"
-					file.close()
-					hashes.write(h)
-			hashes.close()	
-	else:
-		hashes = open(f,'w')
-		#Open all files in Destination (Files to compare targets against)
-		for sd,d,F in os.walk(d):
-			#For each file, make a hash of it and write it in the hash list
-			for filename in F:
-				filepath = sd + os.sep + filename
-				file = open(filepath,mode='rb')
-				h = md5_from_file(file)+"\n"
-				file.close()
-				hashes.write(h)
-		hashes.close()
+					self.file_read = open(filepath,mode='rb')
+					h = self.md5_from_file()
+					self.file_read.close()
+					self.hash_file.write(h)
+			self.hash_file.close()
+	
+	def __init__(self,target,destination,hashes,sort_loc,sort_dest,no_prompt,yes_prompt,no_sort,hash_only):
+		self.hashes = hashes
+		self.target = target
+		self.destination = destination 
+		self.sort_loc = sort_loc
+		self.sort_dest = sort_dest
+		self.no_prompt = no_prompt
+		self.yes_prompt = yes_prompt
+		self.no_sort = no_sort
+		self.hash_only = hash_only
+		if self.destination == None and self.hashes == None:
+			print("You either need -d or -H")
+			sys.exit()
+		
+		if args.sort_loc == None:
+			self.sort_loc = "/usr/share/FileFilter/default_sort_table"
+		
+		if self.no_prompt and self.yes_prompt:
+			print("Cannot specify no and yes to prompt!")
+			sys.exit()
+		elif self.no_prompt == None and self.yes_prompt == None:
+			self.prompt = None
+		elif args.no_prompt:
+			self.prompt = False
+		else:
+			self.prompt = True
+		self.prompt_answer = True if self.prompt == None else False
+		self.prompt = self.prompt if not self.prompt == None else True
+		
+		if self.hashes == None:
+			self.destination = os.path.abspath(self.destination)
+			m = re.search('^(.*/.*/).*$',self.destination)
+			self.hashes = m.group(1)+".hashes"
+			self.make_hashfile()
+		elif args.hash_only:
+			self.hashes = os.path.abspath(self.hashes)
+			self.destination = self.target
+			m = re.search('^(.*/.*/).*$',self.target)
+			self.make_hashfile()
+		elif not args.destination == None:
+			self.destination = os.path.abspath(args.destination)
+			self.hashes = os.path.abspath(args.hashes)
+			self.make_hashfile()
+		else:
+			self.hashes = os.path.abspath(self.hashes)
+			self.destination = os.path.abspath('.')
+		
+		if self.sort_dest == None and not self.hash_only:
+			self.sort_dest = os.path.abspath(self.destination)
+			if not self.sort_dest == os.path.abspath('.'):
+				m = re.search('^(.*/.*/).*$',self.destination)
+				self.sort_dest = m.group(1)+"Sorted/"
+			else:
+				self.sort_dest = self.sort_dest+"/Sorted/"
+			print(self.sort_dest)
+	
+	def read_hashes(self):
+		self.hash_list = []
+		with open(self.hashes,'r') as hashes:
+			h4sh = hashes.readline()
+			while h4sh:
+				self.hash_list.append(h4sh[:-1])
+				h4sh = hashes.readline()
+	
+	def filter(self):
+		if not self.hash_only:
+			self.to_sort = []
+			print("Removing Matching files...")
+			for sd,d,F in os.walk(self.target):
+				for filename in F:
+					filepath = sd + os.sep + filename
+					self.file_read = open(filepath,mode='rb')
+					h = self.md5_from_file(nl=False)
+					found = False
+					for comp in self.hash_list:
+						#If theres a match, remove that file
+						if h == comp:
+							os.remove(filepath)
+							found = True
+							break
+					
+					if not found:
+						#Otherwise, get Add to the to_sort array
+						self.to_sort.append(filepath)
+					self.file_read.close()
+			print("Done")
+	
+	def make_sort_dest(self):
+		if not os.path.isdir(self.sort_dest):
+			os.mkdir(self.sort_dest)
+		for key in self.table.keys():
+			if not os.path.isdir(self.sort_dest+self.table[key]):
+				os.makedirs(self.sort_dest+self.table[key], exist_ok=True)
+	
+	def move_file(self,file,dest):
+		os.rename(file,dest+os.path.basename(file))
+		return dest+os.path.basename(file)
+	
+	def sort(self):
+		if (not self.no_sort) and (not self.hash_only):
+			print("Sorting File on mime type and sort table")
+			if os.path.isfile(self.sort_loc):
+				self.table = {}
+				with open(self.sort_loc,'r') as stable:
+					entry = stable.readline()
+					while entry:
+						if not ( entry[:-1] == "" or entry[0] == "#"):
+							self.table[entry[:-1].split(':')[0]] = entry[:-1].split(':')[1]
+						entry = stable.readline()
+			else:
+				print("Sort table not found and --no-sort wasnt specified, aborting sorting")
+				sys.exit()
+	
+			self.make_sort_dest()
+			
+			for file in self.to_sort:
+				mime = magic.from_file(file, mime=True)
+				moved = False
+				for mt in self.table.keys():
+					if mime == mt:
+						self.move_file(file,self.sort_dest+self.table[mime])
+						moved = True
+				if not moved:
+					self.move_file(file,self.sort_dest+self.table['*'])
+
+#def md5_from_file(f,bs=2**20):
+#	pass
+
+#Function to create and write .hashes
+#def make_hashfile(f, d, prompt=True,v=True):
+#	pass
 
 #Function to moves a file to destination
-def move_file(f,d):
-	os.rename(f,d+os.path.basename(f))
-	return d+os.path.basename(f)
+#def move_file(f,d):
+#	os.rename(f,d+os.path.basename(f))
+#	return d+os.path.basename(f)
 
 #Function to sorts the files to Sort_Dest based on Sort_Loc
-def sort_files(to_sort,sort_loc,sort_dest):
-	sort_loc = os.path.abspath(sort_loc)
-	
-	sort_dest = os.path.abspath(sort_dest)
-	if os.path.isfile(sort_loc):
-		table = {}
-		with open(sort_loc,'r') as stable:
-			entry = stable.readline()
-			c = 1
-			while entry:
-				if not ( entry[:-1] == "" or entry[0] == "#"):
-					table[entry[:-1].split(':')[0]] = entry[:-1].split(':')[1]
-				entry = stable.readline()
-				c += 1
-	else:
-		print("Sort table not found and --no-sort wasnt specified, aborting sorting")
-		sys.exit()
-
-	make_sort_dest(sort_dest,table)
-	
-	for file in to_sort:
-		mime = magic.from_file(file, mime=True)
-		moved = False
-		for mt in table.keys():
-			if mime == mt:
-				move_file(file,sort_dest+table[mime])
-				moved = True
-		if not moved:
-			move_file(file,sort_dest+table['*'])
+#def sort_files(to_sort,sort_loc,sort_dest):
+#	pass
 
 #Function to make the various directories
-def make_sort_dest(sort_dir,table):
-	if not os.path.isdir(sort_dir):
-		os.mkdir(sort_dir)
-	for key in table.keys():
-		if not os.path.isdir(sort_dir+table[key]):
-			os.makedirs(sort_dir+table[key], exist_ok=True)
-
-
+#def make_sort_dest(sort_dir,table):
+#	if not os.path.isdir(sort_dir):
+#		os.mkdir(sort_dir)
+#	for key in table.keys():
+#		if not os.path.isdir(sort_dir+table[key]):
+#			os.makedirs(sort_dir+table[key], exist_ok=True)
 
 #Configure argparser
 parser = argparse.ArgumentParser()
@@ -105,96 +207,15 @@ parser.add_argument('-o','--hash-only',action='store_true')
 parser.add_argument('--no-sort',action='store_true')
 args = parser.parse_args()
 
-Target = args.target
-if args.destination == None and args.hashes == None:
-	print("You either need -d or -H")
-	sys.exit()
-
-if args.sort_loc == None:
-	Sort_Loc = "/usr/share/FileFilter/default_sort_table"
-else:
-	Sort_Loc = args.sort_loc
-
-if args.no_prompt and args.yes_prompt:
-	print("Cannot specify no and yes to prompt!")
-	sys.exit()
-elif args.no_prompt == None and args.yes_prompt == None:
-	prompt = None
-elif args.no_prompt:
-	prompt = False
-else:
-	prompt = True
-
-#Check if hashes hasn't been defined, if it didnt, make one outside destination
-if args.hashes == None:
-	Destination = os.path.abspath(args.destination)
-	m = re.search('^(.*/.*/).*$',Destination)
-	Hashes = m.group(1)+".hashes"
-	make_hashfile(Hashes,Destination,True if prompt == None else False,prompt if not prompt == None else True)
-elif args.hash_only:
-	Hashes = os.path.abspath(args.hashes)
-	m = re.search('^(.*/.*/).*$',Target)
-	make_hashfile(Hashes,Target,False)
-elif not args.destination == None:
-	Destination = os.path.abspath(args.destination)
-	Hashes = os.path.abspath(args.hashes)
-	make_hashfile(Hashes,Destination,True if prompt == None else False,prompt if not prompt == None else True)
-else:
-	Hashes = os.path.abspath(args.hashes)
-	Destination = os.path.abspath('.')
-
-#Sets Sort_Dest (Needed after Destination is defined) to -S or outside destination
-if args.sort_dest == None and not args.hash_only:
-	Sort_Dest = os.path.abspath(Destination)
-	if not Sort_Dest == os.path.abspath('.'):
-		m = re.search('^(.*/.*/).*$',Destination)
-		Sort_Dest = m.group(1)+"Sorted/"
-	else:
-		Sort_Dest = Sort_Dest+"/Sorted/"
-	print(Sort_Dest)
-elif args.sort_dest == None:
-	pass
-else:
-	Sort_Dest = args.sort_dest
-	print(Sort_Dest)
-
+filefilter = ff(args.target,args.destination,args.hashes,args.sort_loc,args.sort_dest,args.no_prompt,args.yes_prompt,args.no_sort,args.hash_only)
 
 #Open hashes in read mode, get all hashes from files, removes trailing newline and stores them in a list
-hashlist = []
-with open(Hashes,'r') as hashes:
-	h4sh = hashes.readline()
-	c = 1
-	while h4sh:
-		hashlist.append(h4sh[:-1])
-		h4sh = hashes.readline()
-		c += 1
+filefilter.read_hashes()
 
 #Open all file in Target
 #For each file, make a hash of it and compare it against the hash list
-if not args.hash_only:
-	to_sort = []
-	print("Removing Matching files...")
-	for sd,d,F in os.walk(Target):
-		for filename in F:
-			filepath = sd + os.sep + filename
-			file = open(filepath,mode='rb')
-			h = md5_from_file(file)
-			found = False
-			for comp in hashlist:
-				#If theres a match, remove that file
-				if h == comp:
-					os.remove(filepath)
-					found = True
-					break
-			
-			if not found:
-				#Otherwise, get Add to the to_sort array
-				to_sort.append(filepath)
-			file.close()
-	print("Done")
+filefilter.filter()
 
 #Sort using Sort_Loc to Sort_Dest is --no-sort isn't specified
-if (not args.no_sort) and (not args.hash_only):
-	print("Sorting File on mime type and sort table")
-	sort_files(to_sort,Sort_Loc,Sort_Dest)
+filefilter.sort()
 print("DONE!!")
