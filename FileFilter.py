@@ -170,30 +170,6 @@ class ff:
 				if not moved:
 					self.move_file(file,self.sort_dest+self.table['*'])
 
-#def md5_from_file(f,bs=2**20):
-#	pass
-
-#Function to create and write .hashes
-#def make_hashfile(f, d, prompt=True,v=True):
-#	pass
-
-#Function to moves a file to destination
-#def move_file(f,d):
-#	os.rename(f,d+os.path.basename(f))
-#	return d+os.path.basename(f)
-
-#Function to sorts the files to Sort_Dest based on Sort_Loc
-#def sort_files(to_sort,sort_loc,sort_dest):
-#	pass
-
-#Function to make the various directories
-#def make_sort_dest(sort_dir,table):
-#	if not os.path.isdir(sort_dir):
-#		os.mkdir(sort_dir)
-#	for key in table.keys():
-#		if not os.path.isdir(sort_dir+table[key]):
-#			os.makedirs(sort_dir+table[key], exist_ok=True)
-
 #Configure argparser
 parser = argparse.ArgumentParser()
 parser.add_argument('target')
