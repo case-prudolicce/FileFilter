@@ -4,7 +4,6 @@
     * Exclusion Rules
 * Sort only option (Do not use hash file, do not remove duplicates) (--sort-only)
 * Verbose option (-v)
-* Man Page
 * Windows compatible version
 * -m option (max bytes for hash)
 # Bugs to fix

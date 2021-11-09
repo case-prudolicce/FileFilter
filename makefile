@@ -4,6 +4,7 @@ install:
 	cp ./default_sort_table /usr/share/FileFilter
 	cp ./FileFilter.py /bin/ff
 	chmod +x /bin/ff
+	cp ./FileFilter.1.gz /usr/share/man/man1/
 
 uninstall:
 	pip uninstall python-magic
