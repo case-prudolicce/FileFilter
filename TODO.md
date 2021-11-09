@@ -6,7 +6,6 @@
 * Verbose option (-v)
 * Man Page
 * Windows compatible version
-* OOP Transition
 * -m option (max bytes for hash)
 # Bugs to fix
 * If the sort table, destination or the hash list is in the target folder, it will get removed
