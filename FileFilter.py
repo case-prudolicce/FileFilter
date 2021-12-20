@@ -171,27 +171,28 @@ class ff:
 					self.move_file(file,self.sort_dest+self.table['*'])
 
 #Configure argparser
-parser = argparse.ArgumentParser()
-parser.add_argument('target')
-parser.add_argument('-d','--destination')
-parser.add_argument('-H','--hashes')
-parser.add_argument('-s','--sort-loc')
-parser.add_argument('-S','--sort-dest')
-parser.add_argument('-n','--no-prompt',action='store_true')
-parser.add_argument('-y','--yes-prompt',action='store_true')
-parser.add_argument('-o','--hash-only',action='store_true')
-parser.add_argument('--no-sort',action='store_true')
-args = parser.parse_args()
-
-filefilter = ff(args.target,args.destination,args.hashes,args.sort_loc,args.sort_dest,args.no_prompt,args.yes_prompt,args.no_sort,args.hash_only)
-
-#Open hashes in read mode, get all hashes from files, removes trailing newline and stores them in a list
-filefilter.read_hashes()
-
-#Open all file in Target
-#For each file, make a hash of it and compare it against the hash list
-filefilter.filter()
-
-#Sort using Sort_Loc to Sort_Dest is --no-sort isn't specified
-filefilter.sort()
-print("DONE!!")
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser()
+	parser.add_argument('target')
+	parser.add_argument('-d','--destination')
+	parser.add_argument('-H','--hashes')
+	parser.add_argument('-s','--sort-loc')
+	parser.add_argument('-S','--sort-dest')
+	parser.add_argument('-n','--no-prompt',action='store_true')
+	parser.add_argument('-y','--yes-prompt',action='store_true')
+	parser.add_argument('-o','--hash-only',action='store_true')
+	parser.add_argument('--no-sort',action='store_true')
+	args = parser.parse_args()
+	
+	filefilter = ff(args.target,args.destination,args.hashes,args.sort_loc,args.sort_dest,args.no_prompt,args.yes_prompt,args.no_sort,args.hash_only)
+	
+	#Open hashes in read mode, get all hashes from files, removes trailing newline and stores them in a list
+	filefilter.read_hashes()
+	
+	#Open all file in Target
+	#For each file, make a hash of it and compare it against the hash list
+	filefilter.filter()
+	
+	#Sort using Sort_Loc to Sort_Dest is --no-sort isn't specified
+	filefilter.sort()
+	print("DONE!!")
