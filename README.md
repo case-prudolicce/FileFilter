@@ -9,7 +9,7 @@
 1. 
     `cd FileFilter`
 1. 
-    `make install`
+    `make install` (with proper privilidges)
 ## Basic Usage:
 
 ```bash 
