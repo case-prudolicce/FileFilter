@@ -34,7 +34,7 @@ class TestFF(unittest.TestCase):
 	def make_hashfile_test_data(self,hn = "./test_hash_list"):
 		self.clean_test_data()
 		self.make_test_data()
-		os.system("./FileFilter.py \"./Test Destination\" -H \""+self.parse_home(hn)+"\" -o >/dev/null")
+		os.system("ff \"./Test Destination\" -H \""+self.parse_home(hn)+"\" -o >/dev/null")
 		shutil.rmtree("./Test Destination")
 
 	#Removes ./.hashes, ./Test Target|Destination, ./Sorted and ./test_hash_list (if found)
@@ -127,7 +127,7 @@ class TestFF(unittest.TestCase):
 	def test_hashfile_basic(self):
 		self.clean_test_data()
 		self.make_hashfile_test_data()
-		os.system("./FileFilter.py \"./Test Target\" -H \"./test_hash_list\" >/dev/null")
+		os.system("ff \"./Test Target\" -H \"./test_hash_list\" >/dev/null")
 		
 		self.check_sorted()
 		self.check_hashfile("test_hash_list")
@@ -149,7 +149,7 @@ class TestFF(unittest.TestCase):
 	def test_basic(self):
 		self.clean_test_data()
 		self.make_test_data()
-		os.system("./FileFilter.py \"./Test Target\" -d \"./Test Destination\" >/dev/null")
+		os.system("ff \"./Test Target\" -d \"./Test Destination\" >/dev/null")
 
 		self.check_sorted()
 		self.check_hashfile()
@@ -171,7 +171,7 @@ class TestFF(unittest.TestCase):
 	def test_absolute_hashfile(self):
 		self.clean_test_data()
 		self.make_hashfile_test_data(hn="~/test_hash_abs_list")
-		os.system("./FileFilter.py \"./Test Target\" -H ~/test_hash_abs_list >/dev/null")
+		os.system("ff \"./Test Target\" -H ~/test_hash_abs_list >/dev/null")
 		
 		self.check_sorted()
 		self.check_hashfile(os.path.expanduser("~")+"/test_hash_abs_list")
@@ -194,7 +194,7 @@ class TestFF(unittest.TestCase):
 	def test_no_sort_hash(self):
 		self.clean_test_data()
 		self.make_hashfile_test_data()
-		os.system("./FileFilter.py --no-sort \"./Test Target\" -H \"./test_hash_list\" >/dev/null")
+		os.system("ff --no-sort \"./Test Target\" -H \"./test_hash_list\" >/dev/null")
 		self.check_no_sorted()
 		self.check_target()
 		self.check_hashfile("test_hash_list")
@@ -216,7 +216,7 @@ class TestFF(unittest.TestCase):
 	def test_no_sort_basic(self):
 		self.clean_test_data()
 		self.make_test_data()
-		os.system("./FileFilter.py --no-sort \"./Test Target\" -d \"./Test Destination\" >/dev/null")
+		os.system("ff --no-sort \"./Test Target\" -d \"./Test Destination\" >/dev/null")
 		self.check_no_sorted()
 		self.check_target()
 		self.check_hashfile()
@@ -238,7 +238,7 @@ class TestFF(unittest.TestCase):
 	def test_no_sort_named_hashfile(self):
 		self.clean_test_data()
 		self.make_hashfile_test_data(hn="Test Hash File")
-		os.system("./FileFilter.py --no-sort \"./Test Target\" -H \"./Test Hash File\" >/dev/null")
+		os.system("ff --no-sort \"./Test Target\" -H \"./Test Hash File\" >/dev/null")
 		self.check_no_sorted()
 		self.check_target()
 		self.check_hashfile("Test Hash File")
