@@ -21,7 +21,6 @@ class ff:
 			if(self.prompt):
 				self.prompt_answer = False if input(self.hashes+" Already exists. Do you want to use it instead of overwriting it (Y/n)?") == "n" else self.prompt
 			if self.prompt_answer: #Overwritting, same as writting
-				print("Making hashfile for "+self.destination)
 				self.hash_file = open(self.hashes,'w')
 				
 				for sd,d,F in os.walk(self.destination):
@@ -99,7 +98,6 @@ class ff:
 				self.sort_dest = m.group(1)+"Sorted/"
 			else:
 				self.sort_dest = self.sort_dest+"/Sorted/"
-			print(self.sort_dest)
 	
 	def read_hashes(self):
 		self.hash_list = []
@@ -112,7 +110,6 @@ class ff:
 	def filter(self):
 		if not self.hash_only:
 			self.to_sort = []
-			print("Removing Matching files...")
 			for sd,d,F in os.walk(self.target):
 				for filename in F:
 					filepath = sd + os.sep + filename
@@ -130,7 +127,6 @@ class ff:
 						#Otherwise, get Add to the to_sort array
 						self.to_sort.append(filepath)
 					self.file_read.close()
-			print("Done")
 	
 	def make_sort_dest(self):
 		if not os.path.isdir(self.sort_dest):
@@ -145,7 +141,6 @@ class ff:
 	
 	def sort(self):
 		if (not self.no_sort) and (not self.hash_only):
-			print("Sorting File on mime type and sort table")
 			if os.path.isfile(self.sort_loc):
 				self.table = {}
 				with open(self.sort_loc,'r') as stable:
@@ -184,6 +179,7 @@ if __name__ == "__main__":
 	parser.add_argument('--no-sort',action='store_true')
 	args = parser.parse_args()
 	
+	#Creates hash file unless provided at creation
 	filefilter = ff(args.target,args.destination,args.hashes,args.sort_loc,args.sort_dest,args.no_prompt,args.yes_prompt,args.no_sort,args.hash_only)
 	
 	#Open hashes in read mode, get all hashes from files, removes trailing newline and stores them in a list
@@ -195,4 +191,3 @@ if __name__ == "__main__":
 	
 	#Sort using Sort_Loc to Sort_Dest is --no-sort isn't specified
 	filefilter.sort()
-	print("DONE!!")
